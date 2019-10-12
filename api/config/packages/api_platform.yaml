@@ -1,12 +1,11 @@
 api_platform:
-    title: Hello API Platform
-    version: 1.0.0
+    title: GameTactic Authentication
+    version: 0.0.1
+    show_webby: false
+    enable_nelmio_api_doc: true
     mapping:
         paths: ['%kernel.project_dir%/src/Entity']
     patch_formats:
         json: ['application/merge-patch+json']
     swagger:
         versions: [3]
-    # Mercure integration, remove if unwanted
-    mercure:
-        hub_url: '%env(MERCURE_SUBSCRIBE_URL)%'

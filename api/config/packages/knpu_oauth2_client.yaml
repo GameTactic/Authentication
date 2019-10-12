@@ -1,0 +1,9 @@
+knpu_oauth2_client:
+    clients:
+        wargaming:
+            type: generic
+            provider_class: App\Security\Provider\Wargaming
+            client_id: '%env(GUARD_WG)%'
+            client_secret: ''
+            redirect_route: connect_wargaming_check
+            redirect_params: {}
