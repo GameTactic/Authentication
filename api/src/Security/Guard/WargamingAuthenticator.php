@@ -195,7 +195,7 @@ final class WargamingAuthenticator extends AbstractGuardAuthenticator
             return new RedirectResponse('/'.$key);
         }
 
-        return new RedirectResponse($user->getRedirect().'?status=ok&key='.$this->jwt->createWargaming($user));
+        return new RedirectResponse($user->getRedirect().'?status=ok&code='.$this->jwt->createWargaming($user));
     }
 
     public function checkCredentials($credentials, UserInterface $user): bool
