@@ -1,6 +1,6 @@
 api_platform:
     title: GameTactic Authentication
-    version: 0.0.1
+    version: 1.0.0
     show_webby: false
     enable_nelmio_api_doc: true
     mapping:
