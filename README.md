@@ -64,7 +64,7 @@ this, so developer can easily develop other applications or test current.
 
 Provider | URL 
 --- | ---
-Wargaming | /connect/wargaming/{region}/{redirect_url}
+Wargaming | /connect/wargaming/{eu,na,ru,asia}/{redirect_url}
 
 ## Contributing
 
