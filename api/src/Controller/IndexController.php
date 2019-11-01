@@ -31,11 +31,11 @@ final class IndexController extends AbstractController
     public function __invoke(string $jwtIssuer, string $jwtPublicKey, ?string $token = null): Response
     {
         return new JsonResponse(
-           [
+            [
                'issuer'       => $jwtIssuer,
                'publicKey'    => file_get_contents($jwtPublicKey),
                'currentToken' => $token,
            ]
-       );
+        );
     }
 }

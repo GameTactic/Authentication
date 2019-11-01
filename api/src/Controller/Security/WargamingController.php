@@ -56,7 +56,8 @@ final class WargamingController extends AbstractController
         if (!\in_array($region, WargamingAuthenticator::REALMS, true)) {
             return new Response(
                 'Region not supported. Supported regions are '
-                .implode(', ', WargamingAuthenticator::REALMS).'. Given \''.$region.'\'.'
+                .implode(', ', WargamingAuthenticator::REALMS).'. Given \''.$region.'\'.',
+                400
             );
         }
 
