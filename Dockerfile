@@ -1,4 +1,4 @@
-FROM richarvey/nginx-php-fpm:latest
+FROM gametactic/nginx-php-fpm:latest
 
 ARG APP_ENV=prod
 ARG APPLICATION_ENV=production
