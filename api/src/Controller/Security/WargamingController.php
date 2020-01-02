@@ -2,11 +2,11 @@
 
 /**
  *
- * GameTactic Authentication 2019 — NOTICE OF LICENSE
+ * GameTactic Authentication 2020 — NOTICE OF LICENSE
  *
  * This source file is released under GPLv3 license by copyright holders.
  * Please see LICENSE file for more specific licensing terms.
- * @copyright 2019-2019 (c) GameTactic
+ * @copyright 2019-2020 (c) GameTactic
  * @author Niko Granö <niko@granö.fi>
  *
  */
@@ -27,8 +27,6 @@ final class WargamingController extends AbstractController
      *
      * @Route(name="connect_wargaming_check", methods={"GET"}, path="/connect/wargaming/callback/{payload}")
      *
-     * @param string|null $payload
-     *
      * @see WargamingAuthenticator
      */
     public function chech(?string $payload = null): void
@@ -37,12 +35,8 @@ final class WargamingController extends AbstractController
     }
 
     /**
-     * @param ClientRegistry $registry
-     * @param Request        $request
-     * @param string         $region
-     * @param string         $redirect
+     * @param string $redirect
      *
-     * @return Response
      * @Route(
      *     name="connect_wargaming_start",
      *     methods={"GET"},

@@ -2,11 +2,11 @@
 
 /**
  *
- * GameTactic Authentication 2019 — NOTICE OF LICENSE
+ * GameTactic Authentication 2020 — NOTICE OF LICENSE
  *
  * This source file is released under GPLv3 license by copyright holders.
  * Please see LICENSE file for more specific licensing terms.
- * @copyright 2019-2019 (c) GameTactic
+ * @copyright 2019-2020 (c) GameTactic
  * @author Niko Granö <niko@granö.fi>
  *
  */
@@ -50,14 +50,6 @@ final class Wargaming
 
     /**
      * Wargaming constructor.
-     *
-     * @param bool              $status
-     * @param string            $accessToken
-     * @param string            $username
-     * @param string            $id
-     * @param DateTimeImmutable $expires
-     * @param string            $region
-     * @param string            $redirect
      */
     public function __construct(
         bool $status,
@@ -78,8 +70,6 @@ final class Wargaming
     }
 
     /**
-     * @param Request $request
-     *
      * @throws Exception
      *
      * @return static
@@ -99,57 +89,36 @@ final class Wargaming
         );
     }
 
-    /**
-     * @return bool
-     */
     public function isStatus(): bool
     {
         return $this->status;
     }
 
-    /**
-     * @return string
-     */
     public function getAccessToken(): string
     {
         return $this->accessToken;
     }
 
-    /**
-     * @return string
-     */
     public function getUsername(): string
     {
         return $this->username;
     }
 
-    /**
-     * @return string
-     */
     public function getId(): string
     {
         return $this->id;
     }
 
-    /**
-     * @return DateTimeImmutable
-     */
     public function getExpires(): DateTimeImmutable
     {
         return $this->expires;
     }
 
-    /**
-     * @return string
-     */
     public function getRegion(): string
     {
         return $this->region;
     }
 
-    /**
-     * @return string
-     */
     public function getRedirect(): string
     {
         return $this->redirect;

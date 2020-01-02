@@ -2,11 +2,11 @@
 
 /**
  *
- * GameTactic Authentication 2019 — NOTICE OF LICENSE
+ * GameTactic Authentication 2020 — NOTICE OF LICENSE
  *
  * This source file is released under GPLv3 license by copyright holders.
  * Please see LICENSE file for more specific licensing terms.
- * @copyright 2019-2019 (c) GameTactic
+ * @copyright 2019-2020 (c) GameTactic
  * @author Niko Granö <niko@granö.fi>
  *
  */
@@ -79,8 +79,6 @@ final class WargamingAuthenticator extends AbstractGuardAuthenticator
      *
      * @param Request                 $request       The request that resulted in an AuthenticationException
      * @param AuthenticationException $authException The exception that started the authentication process
-     *
-     * @return Response
      */
     public function start(Request $request, AuthenticationException $authException = null): Response
     {
@@ -91,10 +89,6 @@ final class WargamingAuthenticator extends AbstractGuardAuthenticator
      * Does the authenticator support the given Request?
      *
      * If this returns false, the authenticator will be skipped.
-     *
-     * @param Request $request
-     *
-     * @return bool
      */
     public function supports(Request $request): bool
     {
@@ -118,8 +112,6 @@ final class WargamingAuthenticator extends AbstractGuardAuthenticator
      *
      *      return ['api_key' => $request->headers->get('X-API-TOKEN')];
      *
-     * @param Request $request
-     *
      * @throws Exception
      *
      * @return Wargaming Any non-null value
@@ -137,10 +129,7 @@ final class WargamingAuthenticator extends AbstractGuardAuthenticator
      * You may throw an AuthenticationException if you wish. If you return
      * null, then a UsernameNotFoundException is thrown for you.
      *
-     * @param Wargaming             $credentials
-     * @param UserProviderInterface $userProvider
-     *
-     * @return UserInterface|null
+     * @param Wargaming $credentials
      */
     public function getUser($credentials, UserProviderInterface $userProvider): ?UserInterface
     {
@@ -159,11 +148,6 @@ final class WargamingAuthenticator extends AbstractGuardAuthenticator
      *
      * If you return null, the request will continue, but the user will
      * not be authenticated. This is probably not what you want to do.
-     *
-     * @param Request                 $request
-     * @param AuthenticationException $exception
-     *
-     * @return Response|null
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
@@ -179,9 +163,7 @@ final class WargamingAuthenticator extends AbstractGuardAuthenticator
      * If you return null, the current request will continue, and the user
      * will be authenticated. This makes sense, for example, with an API.
      *
-     * @param Request        $request
-     * @param TokenInterface $token
-     * @param string         $providerKey The provider (i.e. firewall) key
+     * @param string $providerKey The provider (i.e. firewall) key
      *
      * @return Response|null
      */

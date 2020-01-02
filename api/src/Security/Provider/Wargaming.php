@@ -2,11 +2,11 @@
 
 /**
  *
- * GameTactic Authentication 2019 — NOTICE OF LICENSE
+ * GameTactic Authentication 2020 — NOTICE OF LICENSE
  *
  * This source file is released under GPLv3 license by copyright holders.
  * Please see LICENSE file for more specific licensing terms.
- * @copyright 2019-2019 (c) GameTactic
+ * @copyright 2019-2020 (c) GameTactic
  * @author Niko Granö <niko@granö.fi>
  *
  */
@@ -28,8 +28,6 @@ final class Wargaming extends AbstractProvider
      * Returns the base URL for authorizing a client.
      *
      * Eg. https://oauth.service.com/authorize
-     *
-     * @return string
      */
     public function getBaseAuthorizationUrl(): string
     {
@@ -40,10 +38,6 @@ final class Wargaming extends AbstractProvider
      * Returns the base URL for authorizing a client.
      *
      * Eg. https://oauth.service.com/authorize
-     *
-     * @param string $realm
-     *
-     * @return string
      */
     public function getBaseAuthorizationUrlOverride(string $realm): string
     {
@@ -57,8 +51,6 @@ final class Wargaming extends AbstractProvider
 
     /**
      * Returns authorization parameters based on provided options.
-     *
-     * @param array $options
      *
      * @return array Authorization parameters
      */
@@ -85,8 +77,6 @@ final class Wargaming extends AbstractProvider
     /**
      * Builds the authorization URL.
      *
-     * @param array $options
-     *
      * @return string Authorization URL
      */
     public function getAuthorizationUrl(array $options = []): string
@@ -111,10 +101,6 @@ final class Wargaming extends AbstractProvider
      * Returns the base URL for requesting an access token.
      *
      * Eg. https://oauth.service.com/token
-     *
-     * @param array $params
-     *
-     * @return string
      */
     public function getBaseAccessTokenUrl(array $params): string
     {
@@ -123,10 +109,6 @@ final class Wargaming extends AbstractProvider
 
     /**
      * Returns the URL for requesting the resource owner's details.
-     *
-     * @param AccessToken $token
-     *
-     * @return string
      */
     public function getResourceOwnerDetailsUrl(AccessToken $token): string
     {
@@ -138,8 +120,6 @@ final class Wargaming extends AbstractProvider
      *
      * This should only be the scopes that are required to request the details
      * of the resource owner, rather than all the available scopes.
-     *
-     * @return array
      */
     protected function getDefaultScopes(): array
     {
@@ -149,8 +129,7 @@ final class Wargaming extends AbstractProvider
     /**
      * Checks a provider response for errors.
      *
-     * @param ResponseInterface $response
-     * @param array|string      $data     Parsed response data
+     * @param array|string $data Parsed response data
      */
     protected function checkResponse(ResponseInterface $response, $data): void
     {
@@ -160,9 +139,6 @@ final class Wargaming extends AbstractProvider
     /**
      * Generates a resource owner object from a successful resource owner
      * details request.
-     *
-     * @param array       $response
-     * @param AccessToken $token
      *
      * @return ResourceOwnerInterface|void
      */
