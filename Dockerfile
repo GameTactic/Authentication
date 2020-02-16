@@ -38,7 +38,7 @@ RUN apk add --no-cache libsodium-dev \
     && apk del --purge libsodium-dev
 RUN docker-php-ext-install -j8 pdo_mysql
 RUN apk add nginx supervisor sudo --no-cache
-RUN sed -i 's|error_log = /proc/self/fd/2|error_log = /var/log/php-error.log|g' /usr/local/etc/php-fpm.d/docker.conf
+#RUN sed -i 's|error_log = /proc/self/fd/2|error_log = /var/log/php-error.log|g' /usr/local/etc/php-fpm.d/docker.conf
 RUN touch /var/log/php-error.log;
 RUN echo -e "[PHP]\nupload_max_filesize = 2M\npost_max_size = 4M\n" > /usr/local/etc/php/php.ini
 
