@@ -1,44 +1,53 @@
-FROM gametactic/nginx-php-fpm:latest
+## Install Deps
+FROM composer:latest AS builder
+ENV COMPOSER_ALLOW_SUPERUSER 1
+ENV APP_ENV prod
+ENV APP_SECRET AD1B94FCAB68E57F936A192AA1CFE6E4B7ADC644132EA9D08CC9D7232A70E006
+#ENV GT_MIGRATE=true We dont need migrations for this microservice.
+WORKDIR /app
 
-ARG APP_ENV=prod
-ARG APPLICATION_ENV=production
-ENV WEBROOT=/var/www/html/public
-ENV COMPOSER_ALLOW_SUPERUSER=1
-ENV SKIP_COMPOSER=1
-ENV RUN_SCRIPTS=1
-ENV PHP_CATCHALL=1
-ENV PHP_ERRORS_STDERR=1
-ENV PHP_MEM_LIMIT=256mb
-ENV PHP_UPLOAD_MAX_FILESIZE=16mb
-ENV PHP_POST_MAX_SIZE=32mb
-ENV REAL_IP_HEADER=1
-ENV PATH="${PATH}:/root/.composer/vendor/bin"
-ENV LANG en_US.utf8
+COPY composer.json /app
+COPY composer.lock /app
+COPY symfony.lock /app
+COPY bin /app/bin
+COPY config /app/config
+COPY src /app/src
+COPY public /app/public
 
-RUN /usr/local/bin/docker-php-ext-install pdo pdo_mysql mysqli
+RUN composer install \
+	--no-ansi \
+	--no-dev \
+	--no-interaction \
+	--no-progress \
+	--no-scripts \
+	--ignore-platform-reqs \
+	--optimize-autoloader \
+	--prefer-dist
 
-RUN set -eux; \
-	composer global require "symfony/flex" --prefer-dist --no-progress --no-suggest --classmap-authoritative; \
-	composer clear-cache
+COPY etc/artifact/.env.prod /app/.env
+RUN composer dump-env prod && rm -f .env composer.json composer.lock symfony.lock
 
-COPY api/composer.json api/composer.lock api/symfony.lock ./
-RUN set -eux; \
-	composer install --prefer-dist --no-dev --no-scripts --no-progress --no-suggest; \
-	composer clear-cache
+## Build Backend
+FROM php:7.4-fpm-alpine AS backend
+ENV APP_ENV prod
 
-COPY api/.env ./
-RUN composer dump-env prod; \
-	rm .env
+WORKDIR /app
 
-RUN mkdir scripts ; \
-	wget -q https://raw.githubusercontent.com/GameTactic/Deployment/master/20-migrations.sh ; \
-	chmod +x 20-migrations.sh ; \
-	mv 20-migrations.sh scripts/
+RUN apk add --no-cache libsodium-dev \
+    && docker-php-ext-install -j8 sodium \
+    && apk del --purge libsodium-dev
+RUN docker-php-ext-install -j8 pdo_mysql
+RUN apk add nginx supervisor sudo --no-cache
+RUN sed -i 's|error_log = /proc/self/fd/2|error_log = /var/log/php-error.log|g' /usr/local/etc/php-fpm.d/docker.conf
+RUN touch /var/log/php-error.log;
+RUN echo -e "[PHP]\nupload_max_filesize = 2M\npost_max_size = 4M\n" > /usr/local/etc/php/php.ini
 
-COPY api/bin bin/
-COPY api/config config/
-COPY api/public public/
-COPY api/src src/
-#COPY api/templates templates/
+COPY --from=builder /app /app
+RUN chown www-data:www-data -R /app
+RUN sudo -E -u www-data bin/console assets:install --no-ansi -n public
 
+RUN curl -Ss https://raw.githubusercontent.com/GameTactic/Deployment/master/artifact/nginx.conf > /etc/nginx/conf.d/default.conf
+RUN curl -Ss https://raw.githubusercontent.com/GameTactic/Deployment/master/artifact/supervisord.conf > /etc/supervisord.conf
+RUN curl -Ss https://raw.githubusercontent.com/GameTactic/Deployment/master/artifact/entrypoint.sh > /entrypoint.sh && chmod +x /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
 EXPOSE 80/tcp
