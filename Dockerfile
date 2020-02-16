@@ -38,13 +38,14 @@ RUN apk add --no-cache libsodium-dev \
     && apk del --purge libsodium-dev
 RUN docker-php-ext-install -j8 pdo_mysql
 RUN apk add nginx supervisor sudo --no-cache
-#RUN sed -i 's|error_log = /proc/self/fd/2|error_log = /var/log/php-error.log|g' /usr/local/etc/php-fpm.d/docker.conf
+RUN sed -i 's|error_log = /proc/self/fd/2|error_log = /var/log/php-error.log|g' /usr/local/etc/php-fpm.d/docker.conf
 RUN touch /var/log/php-error.log;
 RUN echo -e "[PHP]\nupload_max_filesize = 2M\npost_max_size = 4M\n" > /usr/local/etc/php/php.ini
 
 COPY --from=builder /app /app
 RUN chown www-data:www-data -R /app
-RUN sudo -E -u www-data bin/console assets:install --no-ansi -n public
+RUN ls -la ; sudo -E -u www-data bin/console cache:clear --no-ansi -n \
+    && sudo -E -u www-data bin/console assets:install --no-ansi -n public
 
 RUN curl -Ss https://raw.githubusercontent.com/GameTactic/Deployment/master/artifact/nginx.conf > /etc/nginx/conf.d/default.conf
 RUN curl -Ss https://raw.githubusercontent.com/GameTactic/Deployment/master/artifact/supervisord.conf > /etc/supervisord.conf
