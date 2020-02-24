@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  *
  * GameTactic Authentication 2020 — NOTICE OF LICENSE
@@ -20,26 +22,11 @@ use Lcobucci\JWT\Signer\Rsa\Sha256;
 
 final class Jwt
 {
-    /**
-     * @var int
-     */
-    private $jwtTtl;
-    /**
-     * @var string
-     */
-    private $jwtAlgorithm;
-    /**
-     * @var string
-     */
-    private $jwtPrivateKey;
-    /**
-     * @var string
-     */
-    private $jwtPublicKey;
-    /**
-     * @var string
-     */
-    private $jwtIssuer;
+    private int $jwtTtl;
+    private string $jwtAlgorithm;
+    private string $jwtPrivateKey;
+    private string $jwtPublicKey;
+    private string $jwtIssuer;
 
     public function __construct(
         int $jwtTtl,

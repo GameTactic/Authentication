@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  *
  * GameTactic Authentication 2020 — NOTICE OF LICENSE
@@ -17,56 +19,25 @@ use DateTimeImmutable;
 use Exception;
 use Symfony\Component\HttpFoundation\Request;
 
-final class Wargaming
+final class Wargaming extends AbstractCredentials
 {
-    /**
-     * @var bool
-     */
-    private $status;
-    /**
-     * @var string
-     */
-    private $accessToken;
-    /**
-     * @var string
-     */
-    private $username;
-    /**
-     * @var string
-     */
-    private $id;
-    /**
-     * @var DateTimeImmutable
-     */
-    private $expires;
-    /**
-     * @var string
-     */
-    private $region;
-    /**
-     * @var string
-     */
-    private $redirect;
+    public bool $status;
+    public string $accessToken;
+    public DateTimeImmutable $expires;
 
-    /**
-     * Wargaming constructor.
-     */
     public function __construct(
-        bool $status,
-        string $accessToken,
-        string $username,
         string $id,
-        DateTimeImmutable $expires,
+        string $username,
         string $region,
-        string $redirect
+        string $redirect,
+        string $accessToken,
+        DateTimeImmutable $expires,
+        bool $status
     ) {
-        $this->status = $status;
         $this->accessToken = $accessToken;
-        $this->username = $username;
-        $this->id = $id;
         $this->expires = $expires;
-        $this->region = $region;
-        $this->redirect = $redirect;
+        $this->status = $status;
+        parent::__construct($id, $username, $region, $redirect);
     }
 
     /**
@@ -76,51 +47,16 @@ final class Wargaming
      */
     public static function fromRequest(Request $request): self
     {
-        $payload = json_decode(base64_decode($request->get('payload'), true), true, 512, JSON_THROW_ON_ERROR);
+        $payload = json_decode(base64_decode($request->get('payload'), true), true, 64, JSON_THROW_ON_ERROR);
 
         return new self(
-            'ok' === $request->get('status', 'error'),
-            $request->get('access_token'),
-            $request->get('nickname'),
             $request->get('account_id'),
-            new DateTimeImmutable(date(DATE_ATOM, $request->get('expires_at', time()))),
+            $request->get('nickname'),
             $payload['realm'],
-            $payload['redirect']
+            $payload['redirect'],
+            $request->get('access_token'),
+            new DateTimeImmutable(date(DATE_ATOM, $request->get('expires_at', time()))),
+            'ok' === $request->get('status', 'error'),
         );
-    }
-
-    public function isStatus(): bool
-    {
-        return $this->status;
-    }
-
-    public function getAccessToken(): string
-    {
-        return $this->accessToken;
-    }
-
-    public function getUsername(): string
-    {
-        return $this->username;
-    }
-
-    public function getId(): string
-    {
-        return $this->id;
-    }
-
-    public function getExpires(): DateTimeImmutable
-    {
-        return $this->expires;
-    }
-
-    public function getRegion(): string
-    {
-        return $this->region;
-    }
-
-    public function getRedirect(): string
-    {
-        return $this->redirect;
     }
 }

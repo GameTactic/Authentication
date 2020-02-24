@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  *
  * GameTactic Authentication 2020 — NOTICE OF LICENSE

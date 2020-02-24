@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  *
  * GameTactic Authentication 2020 — NOTICE OF LICENSE
@@ -25,7 +27,7 @@ final class Wargaming implements UserProviderInterface
      *
      * @param string $username The username
      */
-    public function loadUserByUsername($username): ?UserInterface
+    public function loadUserByUsername(string $username): ?UserInterface
     {
         return null;
     }
@@ -45,10 +47,8 @@ final class Wargaming implements UserProviderInterface
 
     /**
      * Whether this provider supports the given user class.
-     *
-     * @param string $class
      */
-    public function supportsClass($class): bool
+    public function supportsClass(string $class): bool
     {
         return \App\Security\Account\Wargaming::class === $class;
     }
