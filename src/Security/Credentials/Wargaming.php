@@ -55,7 +55,7 @@ final class Wargaming extends AbstractCredentials
             $payload['realm'],
             $payload['redirect'],
             $request->get('access_token'),
-            new DateTimeImmutable(date(DATE_ATOM, $request->get('expires_at', time()))),
+            new DateTimeImmutable(date(DATE_ATOM, (int) $request->get('expires_at', time()))),
             'ok' === $request->get('status', 'error'),
         );
     }

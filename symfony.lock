@@ -25,6 +25,9 @@
     "composer/xdebug-handler": {
         "version": "1.3.3"
     },
+    "defuse/php-encryption": {
+        "version": "v2.2.1"
+    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {
@@ -169,6 +172,9 @@
     },
     "nikic/php-parser": {
         "version": "v4.2.4"
+    },
+    "niko9911/bitwise-flags": {
+        "version": "1.0.1"
     },
     "ocramius/package-versions": {
         "version": "1.5.1"

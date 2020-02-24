@@ -162,4 +162,14 @@ abstract class AbstractRemoteAuthenticator extends AbstractGuardAuthenticator
     {
         return true;
     }
+
+    protected function handleResponse(string $userId, string $type, array $data = []): Response
+    {
+        return new RedirectResponse($this->router->generate(
+            'confirm',
+            [
+                'token' => $this->jwt->createConfirmationToken($userId, $type, $data),
+            ]
+        ));
+    }
 }
