@@ -47,7 +47,9 @@ final class ConfirmationController extends AbstractJwtAwareController
         }
 
         return $this->render('confirm.twig', [
-            'json' => json_encode([]),
+            'token' => $this->jwt->createClientToken($user, false),
+            'redirect' => $token->getClaim('redirect'),
+            'username' => $user->username,
         ]);
     }
 }

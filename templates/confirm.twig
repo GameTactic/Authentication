@@ -1,1 +1,98 @@
-<h1>Hello!</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title> GameTactic </title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="//unpkg.com/vuetify/dist/vuetify.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+    <style>
+        .spinning {
+            animation-name: spin;
+            animation-duration: 5000ms;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div class="input">
+        <v-app id="setup">
+            <v-content>
+                <v-container class="fill-height" fluid>
+                    <v-row align="center" justify="center">
+                        <v-col cols="12" sm="8" md="6">
+                            <v-card class="elevation-12">
+                                <v-toolbar color="primary" dark flat>
+                                    <v-toolbar-title>GameTactic</v-toolbar-title>
+                                </v-toolbar>
+                                <router-view></router-view>
+                            </v-card>
+                        </v-col>
+                    </v-row>
+                </v-container>
+            </v-content>
+        </v-app>
+    </div>
+</div>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="//unpkg.com/vue/dist/vue.js"></script>
+<script src="//unpkg.com/vuetify/dist/vuetify.min.js"></script>
+<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+<!--suppress ES6ModulesDependencies -->
+<script>
+    const Register = {
+        template: `
+        <div id="check-update">
+            <v-card-text>
+                <template>
+                    <v-progress-circular class="float-right" indeterminate color="primary"></v-progress-circular>
+                    <h2>Welcome back {{ username }}!</h2>
+                    <br>
+                    <p> We are processing your request. Please wait moment... </p>
+                </template>
+            </v-card-text>
+        </div>
+        `,
+        mounted: function () {
+            setTimeout(function(){
+                const url = new URL('' === '{{ redirect }}' ? 'https://gametactic.eu' : '{{ redirect }}');
+                url.searchParams.append('code', '{{ token }}');
+                window.location = url.toString();
+            }, 2500);
+        },
+    };
+
+    // No touching bellow this //
+    Vue.use(VueRouter);
+    const router = new VueRouter({
+        mode: "hash",
+        routes: [
+            {path: '', component: Register},
+        ]
+    });
+
+    new Vue({
+        el: '#app',
+        vuetify: new Vuetify({icons: {iconfont: 'md'}}),
+        router: router,
+        components: {
+            Register
+        },
+        data: {},
+        methods: {}
+    });
+</script>
+</body>
+</html>

@@ -15,6 +15,7 @@ declare(strict_types=1);
 
 namespace App\Security\Utils;
 
+use App\Entity\User;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Signer;
 use Lcobucci\JWT\Signer\Key;
@@ -58,7 +59,7 @@ final class Jwt
             ->permittedFor(self::AUD_CONFIRMATION)
             ->identifiedBy($id, true)
             ->issuedAt($this->time)
-            ->expiresAt($this->time + 10)
+            ->expiresAt($this->time + 10  + 5555555555)
             ->withClaim('type', $type);
 
         foreach ($extra as $key => $value) {
@@ -75,7 +76,7 @@ final class Jwt
             ->permittedFor(self::AUD_CONFIRMATION)
             ->identifiedBy($jwt->getClaim('jti'), true)
             ->issuedAt($this->time)
-            ->expiresAt($this->time + 300)
+            ->expiresAt($this->time + 300 + 5555555555)
             ->withClaim('type', $jwt->getClaim('type'));
 
         foreach ($jwt->getClaims() as $key => $value) {
@@ -84,6 +85,21 @@ final class Jwt
             }
             $token = $token->withClaim($key, $value);
         }
+
+        return (string) $token->getToken(self::getSigner(), new Key('file://'.$this->jwtPrivateKey, $this->jwtAlgorithm));
+    }
+
+    public function createClientToken(User $user, bool $remember): string
+    {
+        $token = (new Builder())
+            ->issuedBy($this->jwtIssuer)
+            ->permittedFor(self::AUD_PUBLIC)
+            ->identifiedBy($user->getId(), true)
+            ->issuedAt($this->time)
+            ->expiresAt($this->time + ($remember ? 2592000 : 86400)) // 30 days or 1 day.
+            ->withClaim('username', $user->username)
+            ->withClaim('region', $user->region)
+            ->withClaim('admin', $user->admin);
 
         return (string) $token->getToken(self::getSigner(), new Key('file://'.$this->jwtPrivateKey, $this->jwtAlgorithm));
     }

@@ -31,9 +31,13 @@ class User
      */
     private string $id;
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", unique=true)
      */
     public string $username;
+    /**
+     * @ORM\Column(type="string")
+     */
+    public string $region;
     /**
      * @ORM\Column(type="datetime_immutable")
      */
@@ -51,21 +55,24 @@ class User
      */
     public bool $banned = false;
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true, unique=true)
      */
     public ?string $wargaming = null;
 
     public function __construct(
         string $username,
+        string $region,
         DateTimeImmutable $lastLogin,
-        string $lastIp,
-        bool $admin,
-        bool $banned
+        string $lastIp
     ) {
         $this->username = $username;
+        $this->region = $region;
         $this->lastLogin = $lastLogin;
         $this->lastIp = $lastIp;
-        $this->admin = $admin;
-        $this->banned = $banned;
+    }
+
+    public function getId(): string
+    {
+        return $this->id;
     }
 }
