@@ -16,6 +16,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Security\Utils\Jwt;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,7 +31,7 @@ final class RegisterController extends AbstractJwtAwareController
     public function __invoke(string $token): Response
     {
         // Verify token.
-        $token = $this->verify($token);
+        $token = $this->verify($token, Jwt::AUD_REGISTER);
         if (null === $token || !$token->hasClaim('type')) {
             return JsonResponse::create(['error' => 'Not valid', 'status' => 400], 400);
         }
@@ -38,16 +39,16 @@ final class RegisterController extends AbstractJwtAwareController
 
         if (null !== $user) {
             return $this->render('register.twig', [
-                'token' => '',
+                'token'    => '',
                 'username' => '',
-                'error' => 'registered'
+                'error'    => 'registered',
             ]);
         }
 
         return $this->render('register.twig', [
-            'token' => (string) $token,
+            'token'    => (string) $token,
             'username' => $token->getClaim('username', 'John Doe'),
-            'error' => '',
+            'error'    => '',
         ]);
     }
 
@@ -57,12 +58,15 @@ final class RegisterController extends AbstractJwtAwareController
     public function persist(Request $request, string $token): Response
     {
         // Verify token.
-        $token = $this->verify($token);
+        $token = $this->verify($token, Jwt::AUD_REGISTER);
         if (null === $token || !$token->hasClaim('type')) {
             return JsonResponse::create(['error' => 'Not valid', 'status' => 400], 400);
         }
         $body = json_decode($request->getContent(), false, JSON_THROW_ON_ERROR);
-        $user = new User($body->username, 'eu', new \DateTimeImmutable(), $request->getClientIp());
+        if (!isset($body->username) || !isset($body->region)) {
+            return new JsonResponse(['error' => 'Missing fields', 'status' => 400], 400);
+        }
+        $user = new User($body->username, $body->region, new \DateTimeImmutable(), $request->getClientIp());
         $user->{$token->getClaim('type')} = $token->getClaim('jti');
         $this->em->persist($user);
 
@@ -74,8 +78,9 @@ final class RegisterController extends AbstractJwtAwareController
 
         return JsonResponse::create(
             [
-                'token' => $this->jwt->createClientToken($user, false),
+                'token'    => $this->jwt->createClientToken($user, false),
                 'redirect' => $token->getClaim('redirect'),
-            ]);
+            ]
+        );
     }
 }

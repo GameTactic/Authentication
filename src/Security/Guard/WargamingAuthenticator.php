@@ -18,7 +18,6 @@ namespace App\Security\Guard;
 use App\Security\Account\Wargaming as Account;
 use App\Security\Credentials\Wargaming as Credentials;
 use App\Security\Utils\Jwt;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;

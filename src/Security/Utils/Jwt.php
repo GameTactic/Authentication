@@ -59,7 +59,7 @@ final class Jwt
             ->permittedFor(self::AUD_CONFIRMATION)
             ->identifiedBy($id, true)
             ->issuedAt($this->time)
-            ->expiresAt($this->time + 10  + 5555555555)
+            ->expiresAt($this->time + 10 + 5555555555)
             ->withClaim('type', $type);
 
         foreach ($extra as $key => $value) {
@@ -73,14 +73,14 @@ final class Jwt
     {
         $token = (new Builder())
             ->issuedBy($this->jwtIssuer)
-            ->permittedFor(self::AUD_CONFIRMATION)
+            ->permittedFor(self::AUD_REGISTER)
             ->identifiedBy($jwt->getClaim('jti'), true)
             ->issuedAt($this->time)
             ->expiresAt($this->time + 300 + 5555555555)
             ->withClaim('type', $jwt->getClaim('type'));
 
         foreach ($jwt->getClaims() as $key => $value) {
-            if (\in_array($key, ['iss', 'jti', 'iat', 'exp'], true)) {
+            if (\in_array($key, ['iss', 'aud', 'jti', 'iat', 'exp'], true)) {
                 continue;
             }
             $token = $token->withClaim($key, $value);

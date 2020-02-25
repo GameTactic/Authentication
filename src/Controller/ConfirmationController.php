@@ -15,9 +15,11 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Security\Utils\Jwt;
 use Lcobucci\JWT\Token;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -26,15 +28,14 @@ final class ConfirmationController extends AbstractJwtAwareController
     /**
      * @Route(name="confirm", methods={"GET"}, path="/confirm/{token}")
      */
-    public function __invoke(string $token): Response
+    public function __invoke(Request $request, string $token): Response
     {
         // Verify token.
-        $token = $this->verify($token);
+        $token = $this->verify($token, Jwt::AUD_CONFIRMATION);
         if (null === $token || !$token->hasClaim('type')) {
             return JsonResponse::create(['error' => 'Not valid', 'status' => 400], 400);
         }
         $user = $this->findUser($token);
-
         if (null === $user) {
             return new RedirectResponse(
                 $this->router->generate(
@@ -45,9 +46,12 @@ final class ConfirmationController extends AbstractJwtAwareController
                 )
             );
         }
+        $user->lastLogin = new \DateTimeImmutable();
+        $user->lastIp = $request->getClientIp();
+        $this->em->flush();
 
         return $this->render('confirm.twig', [
-            'token' => $this->jwt->createClientToken($user, false),
+            'token'    => $this->jwt->createClientToken($user, false),
             'redirect' => $token->getClaim('redirect'),
             'username' => $user->username,
         ]);

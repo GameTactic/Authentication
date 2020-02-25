@@ -87,7 +87,8 @@
                             <v-form v-model="usernameValid">
                                 <p> Please select username. It will be same, even you login via different service. </p>
                                 <v-text-field v-model="username" :rules="nameRules" label="Username" :counter="32"
-                                    placeholder="{{ username }}" @input="onUsername()" required />
+                                    placeholder="{{ username }}" @input="onProfileFields()" required />
+                                <v-select v-model="region" :items="regions" label="Region" item-value="val" item-text="key" @change="onProfileFields()"/>
                             </v-form>
                         </template>
                         <template v-if="slide === 4">
@@ -107,7 +108,6 @@
             <v-divider style="margin-top: 15px" />
             <v-card-actions v-if="'{{ error }}' === ''">
                 <v-spacer />
-                <v-btn color="danger" @click="persist()">Debug</v-btn>
                 <v-btn color="link" @click="previousSlide()" :disabled="slide <= 2 || slide === 4">Go Back</v-btn>
                 <v-btn color="primary" @click="nextSlide()" :disabled="cannotContinue">Continue</v-btn>
             </v-card-actions>
@@ -120,9 +120,16 @@
                 tos: false,
                 username: '',
                 usernameValid: false,
+                region: '',
+                regions: [
+                    { val: 'eu', key: 'Europe' },
+                    { val: 'asia', key: 'Asia' },
+                    { val: 'ru', key: 'Russia' },
+                    { val: 'na', key: 'North America' },
+                ],
                 nameRules: [
-                    v => !!v || 'Name is required',
-                    v => v.length <= 32 || 'Username must be less than 32 characters',
+                    v => !!v || 'Username is required',
+                    v => (v.length <= 32 && v.length > 3) || 'Username must be less than 32 characters and greater than 3',
                 ],
                 _token: '',
                 _redirect: '',
@@ -154,6 +161,7 @@
                 const res = await axios.post('/register/{{ token }}', {
                     username: this.username,
                     tos: this.tos,
+                    region: this.region,
                 });
                 this._redirect = res.data.redirect;
                 this._token = res.data.token;
@@ -164,11 +172,11 @@
                 url.searchParams.append('code', this._token);
                 window.location = url.toString();
             },
-            onUsername: function () {
-                if (this.usernameValid) {
+            onProfileFields: function () {
+                if (this.usernameValid && this.region !== '') {
                     this.cannotContinue = false;
                 }
-            }
+            },
         }
     };
 

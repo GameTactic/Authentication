@@ -52,27 +52,50 @@
 <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
 <!--suppress ES6ModulesDependencies -->
 <script>
-    const Confirm = {
+    const Profile = {
         template: `
         <div id="check-update">
             <v-card-text>
                 <template>
-                    <h2>Welcome back {{ username }}!</h2>
+                    <v-label> <h2> Profile of user {{ user.username }} </h2> </v-label>
                     <br>
-                    <p> Please press "continue" to return <code>{{ redirect|default('https://gametactic.eu') }}</code></p>
+                    <v-form>
+                        <v-text-field v-model="username" :rules="nameRules" label="Username" :counter="32"
+                            placeholder="{{ user.username }}" @input="onUsername()" required disabled />
+                        <v-text-field v-model="region" label="Region" placeholder="{{ user.region }}" required disabled />
+                        <v-label> <b> Connected services </b> </v-label>
+                        <v-checkbox v-model="wargaming" disabled label="Wargaming (EU/NA/ASIA/SA)" />
+                        <p> Last login: {{ user.lastLogin }} from {{ user.lastIp }}. </p>
+                        <small>
+                            Details can be changed only via support with good reason.
+                            Data shown here are only related to your authentication.
+                        </small>
+                    </v-form>
                     <v-divider style="margin-top: 15px" />
                 </template>
             </v-card-text>
             <v-card-actions>
                 <v-spacer />
-                <v-btn color="link" @click="goProfile()">Profile</v-btn>
                 <v-btn color="primary" @click="redirect()">Continue</v-btn>
             </v-card-actions>
         </div>
         `,
+        data() {
+            return {
+                username: '{{ user.username }}',
+                usernameValid: false,
+                nameRules: [
+                    v => !!v || 'Username is required',
+                    v => v.length <= 32 || 'Username must be less than 32 characters',
+                ],
+                wargaming: () => '{{ user.wargaming }}' === '',
+            }
+        },
         methods: {
-            goProfile: function () {
-                window.location = '{{ path('profile', { token: token, redirect: redirect }) }}';
+            onUsername: function () {
+                if (this.usernameValid) {
+                    this.cannotContinue = false;
+                }
             },
             redirect: function () {
                 const url = new URL('{{ redirect|default('https://gametactic.eu') }}');
@@ -87,7 +110,7 @@
     const router = new VueRouter({
         mode: "hash",
         routes: [
-            {path: '', component: Confirm },
+            {path: '', component: Profile },
         ]
     });
 
@@ -96,7 +119,7 @@
         vuetify: new Vuetify({icons: {iconfont: 'md'}}),
         router: router,
         components: {
-            Confirm
+            Profile
         },
         data: {},
         methods: {}

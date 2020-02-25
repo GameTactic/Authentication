@@ -46,11 +46,11 @@ abstract class AbstractJwtAwareController extends AbstractController
         $this->jwt = $jwt;
     }
 
-    protected function verify(string $token): ?Token
+    protected function verify(string $token, string $aud): ?Token
     {
         $data = new ValidationData();
         $data->setIssuer($this->jwtIssuer);
-        $data->setAudience(Jwt::AUD_CONFIRMATION);
+        $data->setAudience($aud);
         $data->setCurrentTime(time());
         $token = (new Parser())->parse($token);
         $valid = $token->verify(Jwt::getSigner(), file_get_contents($this->jwtPublicKey)) && $token->validate($data);
@@ -58,14 +58,18 @@ abstract class AbstractJwtAwareController extends AbstractController
         return $valid ? $token : null;
     }
 
-    protected function findUser(Token $token): ?User
+    protected function findUser(Token $token, bool $uuid = false): ?User
     {
-        $type = $token->getClaim('type');
-        if (!\in_array($type, Jwt::TYPES, true)) {
-            throw new \LogicException('Type not supported!');
+        if ($uuid) {
+            $user = $this->em->getRepository(User::class)->find($token->getClaim('jti'));
+        } else {
+            $type = $token->getClaim('type');
+            if (!\in_array($type, Jwt::TYPES, true)) {
+                throw new \LogicException('Type not supported!');
+            }
+            /** @var User $user */
+            $user = $this->em->getRepository(User::class)->findOneBy([$type => $token->getClaim('jti')]);
         }
-        /** @var User $user */
-        $user = $this->em->getRepository(User::class)->findOneBy([$type => $token->getClaim('jti')]);
 
         return $user;
     }
