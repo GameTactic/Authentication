@@ -44,7 +44,7 @@ RUN echo -e "[PHP]\nupload_max_filesize = 2M\npost_max_size = 4M\n" > /usr/local
 
 COPY --from=builder /app /app
 RUN chown www-data:www-data -R /app
-RUN ls -la ; sudo -E -u www-data bin/console cache:clear --no-ansi -n \
+RUN sudo -E -u www-data bin/console cache:clear --no-ansi -n \
     && sudo -E -u www-data bin/console assets:install --no-ansi -n public
 
 RUN curl -Ss https://raw.githubusercontent.com/GameTactic/Deployment/master/artifact/nginx.conf > /etc/nginx/conf.d/default.conf
