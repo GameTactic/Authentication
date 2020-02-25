@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f26ecb1696cb3f706e2e07952a7527f2",
+    "content-hash": "fe24737d46b0c91409418a81446b3faf",
     "packages": [
         {
             "name": "api-platform/api-pack",
@@ -192,69 +192,6 @@
                 "swagger"
             ],
             "time": "2020-01-13T16:27:19+00:00"
-        },
-        {
-            "name": "defuse/php-encryption",
-            "version": "v2.2.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/defuse/php-encryption.git",
-                "reference": "0f407c43b953d571421e0020ba92082ed5fb7620"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/defuse/php-encryption/zipball/0f407c43b953d571421e0020ba92082ed5fb7620",
-                "reference": "0f407c43b953d571421e0020ba92082ed5fb7620",
-                "shasum": ""
-            },
-            "require": {
-                "ext-openssl": "*",
-                "paragonie/random_compat": ">= 2",
-                "php": ">=5.4.0"
-            },
-            "require-dev": {
-                "nikic/php-parser": "^2.0|^3.0|^4.0",
-                "phpunit/phpunit": "^4|^5"
-            },
-            "bin": [
-                "bin/generate-defuse-key"
-            ],
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Defuse\\Crypto\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Taylor Hornby",
-                    "email": "taylor@defuse.ca",
-                    "homepage": "https://defuse.ca/"
-                },
-                {
-                    "name": "Scott Arciszewski",
-                    "email": "info@paragonie.com",
-                    "homepage": "https://paragonie.com"
-                }
-            ],
-            "description": "Secure PHP Encryption Library",
-            "keywords": [
-                "aes",
-                "authenticated encryption",
-                "cipher",
-                "crypto",
-                "cryptography",
-                "encrypt",
-                "encryption",
-                "openssl",
-                "security",
-                "symmetric key cryptography"
-            ],
-            "time": "2018-07-24T23:27:56+00:00"
         },
         {
             "name": "doctrine/annotations",
@@ -2101,48 +2038,6 @@
                 "crossdomain"
             ],
             "time": "2019-11-15T08:54:08+00:00"
-        },
-        {
-            "name": "niko9911/bitwise-flags",
-            "version": "1.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Niko9911/php-bitwise-flags.git",
-                "reference": "319ac90dc9303941511cd13f9f975109f99087c7"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Niko9911/php-bitwise-flags/zipball/319ac90dc9303941511cd13f9f975109f99087c7",
-                "reference": "319ac90dc9303941511cd13f9f975109f99087c7",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.1"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "^2",
-                "phpunit/phpunit": "^7 || ^8"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Niko9911\\Flags\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Niko Grano",
-                    "email": "niko9911@ironlions.fi",
-                    "homepage": "https://xn--gran-8qa.fi",
-                    "role": "Maintainer"
-                }
-            ],
-            "description": "Managing your flag booleans with bits.",
-            "time": "2019-03-04T14:39:31+00:00"
         },
         {
             "name": "ocramius/package-versions",
