@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ app.request.locale|split('_')[0] }}">
 <head>
     <meta charset="utf-8">
     <title> GameTactic </title>
@@ -57,18 +57,18 @@
         <div id="check-update">
             <v-card-text>
                 <template>
-                    <v-label> <h2> Profile of user {{ user.username }} </h2> </v-label>
+                    <v-label> <h2> {{ 'Profile of user %username%'|trans({'%username%': user.username}) }} </h2> </v-label>
                     <br>
                     <v-form>
-                        <v-text-field v-model="username" :rules="nameRules" label="Username" :counter="32"
+                        <v-text-field v-model="username" :rules="nameRules" label="{{ 'Username'|trans() }}" :counter="32"
                             placeholder="{{ user.username }}" @input="onUsername()" required disabled />
-                        <v-text-field v-model="region" label="Region" placeholder="{{ user.region }}" required disabled />
-                        <v-label> <b> Connected services </b> </v-label>
+                        <v-text-field v-model="region" label="{{ 'Region'|trans() }}" placeholder="{{ user.region }}" required disabled />
+                        <v-label> <b> {{ 'Connected services'|trans() }} </b> </v-label>
                         <v-checkbox v-model="wargaming" disabled label="Wargaming (EU/NA/ASIA/SA)" />
-                        <p> Last login: {{ user.lastLogin }} from {{ user.lastIp }}. </p>
+                        <p> {{ 'Last login: %time% from %ip%.'|trans({'%time%': user.lastLogin, '%ip%': user.lastIp }) }} </p>
                         <small>
-                            Details can be changed only via support with good reason.
-                            Data shown here are only related to your authentication.
+                            {{ 'Details can be changed only via support with good reason.'|trans() }}
+                            {{ 'Data shown here are only related to your authentication.'|trans() }}
                         </small>
                     </v-form>
                     <v-divider style="margin-top: 15px" />
@@ -76,7 +76,7 @@
             </v-card-text>
             <v-card-actions>
                 <v-spacer />
-                <v-btn color="primary" @click="redirect()">Continue</v-btn>
+                <v-btn color="primary" @click="redirect()">{{ 'Continue'|trans() }}</v-btn>
             </v-card-actions>
         </div>
         `,
@@ -85,8 +85,8 @@
                 username: '{{ user.username }}',
                 usernameValid: false,
                 nameRules: [
-                    v => !!v || 'Username is required',
-                    v => v.length <= 32 || 'Username must be less than 32 characters',
+                    v => !!v || '{{ 'Username is required'|trans() }}',
+                    v => v.length <= 32 || '{{ 'Username must be less than 32 characters'|trans() }}',
                 ],
                 wargaming: () => '{{ user.wargaming }}' === '',
             }

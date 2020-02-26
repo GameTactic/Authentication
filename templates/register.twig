@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ app.request.locale|split('_')[0] }}">
 <head>
     <meta charset="utf-8">
     <title> GameTactic </title>
@@ -59,57 +59,56 @@
                 <template v-if="'{{ error }}' === ''">
                      <v-stepper v-model="slide">
                         <v-stepper-header>
-                            <v-stepper-step :complete="slide > 1" step="1"> Welcome </v-stepper-step>
-                            <v-stepper-step :complete="slide > 2" step="2"> Terms of Service </v-stepper-step>
-                            <v-stepper-step :complete="slide > 3" step="3"> Profile </v-stepper-step>
-                            <v-stepper-step :complete="slide > 4" step="4"> Go! </v-stepper-step>
+                            <v-stepper-step :complete="slide > 1" step="1"> {{ 'Welcome'|trans() }} </v-stepper-step>
+                            <v-stepper-step :complete="slide > 2" step="2">{{ 'Terms of Service'|trans() }}</v-stepper-step>
+                            <v-stepper-step :complete="slide > 3" step="3">{{ 'Profile'|trans() }}</v-stepper-step>
+                            <v-stepper-step :complete="slide > 4" step="4">{{ 'Go!'|trans() }}</v-stepper-step>
                         </v-stepper-header>
                     </v-stepper>
                     <v-divider style="margin: 15px 0 15px 0"/>
                     <v-form>
                         <template v-if="slide === 1">
-                            <h2>Welcome, {{ username }}!</h2>
+                            <h2>{{ 'Welcome, %username%!'|trans({'%username%': username }) }}</h2>
                             <br>
                             <p>
-                                We need to check few things before we can continue.
-                                Some are standard things, some are customizations for your account. <br> <br>
-                                <i>Thank you for using GameTactic services!</i>
+                                {{ 'We need to check few things before we can continue.'|trans() }}
+                                {{ 'Some are standard things, some are customizations for your account.'|trans() }} <br> <br>
+                                <i>{{ 'Thank you for using GameTactic services!'|trans() }}</i>
                             </p>
                         </template>
                         <template v-if="slide === 2">
                             <p>
-                                Please click and read <a target="_blank" href="https://gametactic.eu/tos"> terms of service </a> fully.
-                                When you're done, please agree them bellow.
-                                <v-checkbox v-model="tos" @click="cannotContinue = false" :disabled="tos" label="I Accept Terms of Service" />
+                                {{ 'Please click and read %href% terms of service %tag% fully.'|trans({'%href%': '<a target="_blank" href="https://gametactic.eu/tos">', '%tag%': '</a> '})|raw }}
+                                {{ 'When you're done, please agree them bellow.'|trans() }}
+                                <v-checkbox v-model="tos" @click="cannotContinue = false" :disabled="tos" label="{{ 'I Accept Terms of Service'|trans() }}" />
                             </p>
                         </template>
                         <template v-if="slide === 3">
                             <v-form v-model="usernameValid">
-                                <p> Please select username. It will be same, even you login via different service. </p>
+                                <p>{{ 'Please select username. It will be the same even if you login via a different provider.'|trans() }}</p>
                                 <v-text-field v-model="username" :rules="nameRules" label="Username" :counter="32"
                                     placeholder="{{ username }}" @input="onProfileFields()" required />
                                 <v-select v-model="region" :items="regions" label="Region" item-value="val" item-text="key" @change="onProfileFields()"/>
                             </v-form>
                         </template>
                         <template v-if="slide === 4">
-                            <h2>Thank you {{ '{{ username }}' }}!</h2>
+                            <h2>{{ 'Thank you %username%!'|trans({'%username%': username}) }}</h2>
                             <br>
                             <p>
-                                You are now ready to go. Just press "continue" and you will be redirected
-                                back where you left off.
+                                {{ 'You are now ready to go. Just press "continue" and you will be redirected back to where you came from.'|trans() }}
                             </p>
                         </template>
                     </v-form>
                 </template>
                 <template v-if="'{{ error }}' === 'registered'">
-                    <p> You have already registered! </p>
+                    <p> {{ 'You have already registered!'|trans() }} </p>
                 </template>
             </v-card-text>
             <v-divider style="margin-top: 15px" />
             <v-card-actions v-if="'{{ error }}' === ''">
                 <v-spacer />
-                <v-btn color="link" @click="previousSlide()" :disabled="slide <= 2 || slide === 4">Go Back</v-btn>
-                <v-btn color="primary" @click="nextSlide()" :disabled="cannotContinue">Continue</v-btn>
+                <v-btn color="link" @click="previousSlide()" :disabled="slide <= 2 || slide === 4">{{ 'Go Back'|trans() }}</v-btn>
+                <v-btn color="primary" @click="nextSlide()" :disabled="cannotContinue">{{ 'Continue'|trans() }}</v-btn>
             </v-card-actions>
         </div>
         `,
@@ -122,14 +121,14 @@
                 usernameValid: false,
                 region: '',
                 regions: [
-                    { val: 'eu', key: 'Europe' },
-                    { val: 'asia', key: 'Asia' },
-                    { val: 'ru', key: 'Russia' },
-                    { val: 'na', key: 'North America' },
+                    { val: 'eu', key: '{{ 'Europe'|trans() }}' },
+                    { val: 'asia', key: '{{ 'Asia'|trans() }}' },
+                    { val: 'ru', key: '{{ 'Russia'|trans() }}' },
+                    { val: 'na', key: '{{ 'North America'|trans() }}' },
                 ],
                 nameRules: [
-                    v => !!v || 'Username is required',
-                    v => (v.length <= 32 && v.length > 3) || 'Username must be less than 32 characters and greater than 3',
+                    v => !!v || '{{ 'Username is required'|trans() }}',
+                    v => (v.length <= 32 && v.length > 3) || '{{ 'Username must be less than 32 characters and greater than 3'|trans() }}',
                 ],
                 _token: '',
                 _redirect: '',
@@ -139,7 +138,6 @@
         },
         methods: {
             nextSlide: function () {
-                console.log(this.slide > 4);
                 if (this.slide === 4) {
                     this.redirect();
 
@@ -180,7 +178,6 @@
         }
     };
 
-    // No touching bellow this //
     Vue.use(VueRouter);
     const router = new VueRouter({
         mode: "hash",
