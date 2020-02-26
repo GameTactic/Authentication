@@ -59,7 +59,7 @@
                 <template v-if="'{{ error }}' === ''">
                      <v-stepper v-model="slide">
                         <v-stepper-header>
-                            <v-stepper-step :complete="slide > 1" step="1"> {{ 'Welcome'|trans() }} </v-stepper-step>
+                            <v-stepper-step :complete="slide > 1" step="1">{{ 'Welcome'|trans() }}</v-stepper-step>
                             <v-stepper-step :complete="slide > 2" step="2">{{ 'Terms of Service'|trans() }}</v-stepper-step>
                             <v-stepper-step :complete="slide > 3" step="3">{{ 'Profile'|trans() }}</v-stepper-step>
                             <v-stepper-step :complete="slide > 4" step="4">{{ 'Go!'|trans() }}</v-stepper-step>
@@ -79,7 +79,7 @@
                         <template v-if="slide === 2">
                             <p>
                                 {{ 'Please click and read %href% terms of service %tag% fully.'|trans({'%href%': '<a target="_blank" href="https://gametactic.eu/tos">', '%tag%': '</a> '})|raw }}
-                                {{ 'When you're done, please agree them bellow.'|trans() }}
+                                {{ 'When you\'re done, please agree them below.'|trans() }}
                                 <v-checkbox v-model="tos" @click="cannotContinue = false" :disabled="tos" label="{{ 'I Accept Terms of Service'|trans() }}" />
                             </p>
                         </template>
@@ -92,7 +92,7 @@
                             </v-form>
                         </template>
                         <template v-if="slide === 4">
-                            <h2>{{ 'Thank you %username%!'|trans({'%username%': username}) }}</h2>
+                            <h2>{{ 'Thank you %username%'|trans({'%username%': username}) }}!</h2>
                             <br>
                             <p>
                                 {{ 'You are now ready to go. Just press "continue" and you will be redirected back to where you came from.'|trans() }}
@@ -101,7 +101,7 @@
                     </v-form>
                 </template>
                 <template v-if="'{{ error }}' === 'registered'">
-                    <p> {{ 'You have already registered!'|trans() }} </p>
+                    <p> {{ 'You have already registered'|trans() }}! </p>
                 </template>
             </v-card-text>
             <v-divider style="margin-top: 15px" />
