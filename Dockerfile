@@ -46,6 +46,8 @@ RUN chown www-data:www-data -R /app
 RUN sudo -E -u www-data bin/console cache:clear --no-ansi -n \
     && sudo -E -u www-data bin/console assets:install --no-ansi -n public
 
+RUN apk add --no-cache git && git submodule update --init --recursive && apk del --purge git
+
 RUN curl -Ss https://raw.githubusercontent.com/GameTactic/Deployment/master/artifact/nginx.conf > /etc/nginx/conf.d/default.conf
 RUN curl -Ss https://raw.githubusercontent.com/GameTactic/Deployment/master/artifact/supervisord.conf > /etc/supervisord.conf
 RUN curl -Ss https://raw.githubusercontent.com/GameTactic/Deployment/master/artifact/entrypoint.sh > /entrypoint.sh && chmod +x /entrypoint.sh
