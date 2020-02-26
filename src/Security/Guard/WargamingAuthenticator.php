@@ -17,7 +17,7 @@ namespace App\Security\Guard;
 
 use App\Security\Account\Wargaming as Account;
 use App\Security\Credentials\Wargaming as Credentials;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use App\Security\Utils\Jwt;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -54,12 +54,15 @@ final class WargamingAuthenticator extends AbstractRemoteAuthenticator
     {
         /** @var Account $user */
         $user = $token->getUser();
-        $key = $this->jwt->createWargaming($user);
 
-        if (empty($user->getRedirect())) {
-            return new RedirectResponse('/'.$key);
-        }
-
-        return new RedirectResponse($user->getRedirect().'?status=ok&code='.$this->jwt->createWargaming($user));
+        return $this->handleResponse(
+            $user->getId(),
+            Jwt::TYPE_WARGAMING,
+            [
+                'region'   => $user->getRegion(),
+                'redirect' => $user->getRedirect(),
+                'username' => $user->getUsername(),
+            ]
+        );
     }
 }

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="{{ app.request.locale|split('_')[0] }}">
+<head>
+    <meta charset="utf-8">
+    <title> GameTactic </title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="//unpkg.com/vuetify/dist/vuetify.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+    <style>
+        .spinning {
+            animation-name: spin;
+            animation-duration: 5000ms;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div class="input">
+        <v-app id="setup">
+            <v-content>
+                <v-container class="fill-height" fluid>
+                    <v-row align="center" justify="center">
+                        <v-col cols="12" sm="8" md="6">
+                            <v-card class="elevation-12">
+                                <v-toolbar color="primary" dark flat>
+                                    <v-toolbar-title>GameTactic</v-toolbar-title>
+                                </v-toolbar>
+                                <router-view></router-view>
+                            </v-card>
+                        </v-col>
+                    </v-row>
+                </v-container>
+            </v-content>
+        </v-app>
+    </div>
+</div>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="//unpkg.com/vue/dist/vue.js"></script>
+<script src="//unpkg.com/vuetify/dist/vuetify.min.js"></script>
+<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+<!--suppress ES6ModulesDependencies -->
+<script>
+    const Profile = {
+        template: `
+        <div id="check-update">
+            <v-card-text>
+                <template>
+                    <v-label> <h2> {{ 'Profile of user %username%'|trans({'%username%': user.username}) }} </h2> </v-label>
+                    <br>
+                    <v-form>
+                        <v-text-field v-model="username" :rules="nameRules" label="{{ 'Username'|trans() }}" :counter="32"
+                            placeholder="{{ user.username }}" @input="onUsername()" required disabled />
+                        <v-text-field v-model="region" label="{{ 'Region'|trans() }}" placeholder="{{ user.region }}" required disabled />
+                        <v-label> <b> {{ 'Connected services'|trans() }} </b> </v-label>
+                        <v-checkbox v-model="wargaming" disabled label="Wargaming (EU/NA/ASIA/SA)" />
+                        <p> {{ 'Last login: %time% from %ip%.'|trans({'%time%': user.lastLogin, '%ip%': user.lastIp }) }} </p>
+                        <small>
+                            {{ 'Details can be changed only via support with good reason.'|trans() }}
+                            {{ 'Data shown here are only related to your authentication.'|trans() }}
+                        </small>
+                    </v-form>
+                    <v-divider style="margin-top: 15px" />
+                </template>
+            </v-card-text>{{ 'Terms of Service'|trans() }}
+            <v-card-actions>
+                <v-spacer />
+                <v-btn color="primary" @click="redirect()">{{ 'Continue'|trans() }}</v-btn>
+            </v-card-actions>
+        </div>
+        `,
+        data() {
+            return {
+                username: '{{ user.username }}',
+                usernameValid: false,
+                nameRules: [
+                    v => !!v || '{{ 'Username is required'|trans() }}',
+                    v => v.length <= 32 || '{{ 'Username must be less than 32 characters'|trans() }}',
+                ],
+                wargaming: () => '{{ user.wargaming }}' === '',
+            }
+        },
+        methods: {
+            onUsername: function () {
+                if (this.usernameValid) {
+                    this.cannotContinue = false;
+                }
+            },
+            redirect: function () {
+                const url = new URL('{{ redirect|default('https://gametactic.eu') }}');
+                url.searchParams.append('code', '{{ token }}');
+                window.location = url.toString();
+            }
+        }
+    };
+
+    // No touching bellow this //
+    Vue.use(VueRouter);
+    const router = new VueRouter({
+        mode: "hash",
+        routes: [
+            {path: '', component: Profile },
+        ]
+    });
+
+    new Vue({
+        el: '#app',
+        vuetify: new Vuetify({icons: {iconfont: 'md'}}),
+        router: router,
+        components: {
+            Profile
+        },
+        data: {},
+        methods: {}
+    });
+</script>
+</body>
+</html>

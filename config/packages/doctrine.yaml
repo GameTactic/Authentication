@@ -2,7 +2,7 @@ doctrine:
     dbal:
         # configure these for your database server
         driver: 'pdo_mysqli'
-        server_version: '10.4'
+        server_version: 'mariadb-10.4.11'
 
         url: '%env(resolve:DATABASE_URL)%'
     orm:
