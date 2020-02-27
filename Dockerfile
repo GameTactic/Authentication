@@ -12,6 +12,7 @@ COPY bin /app/bin
 COPY config /app/config
 COPY src /app/src
 COPY public /app/public
+COPY templates /app/templates
 COPY translations/auth /app/translations/auth
 
 RUN composer install \
